@@ -1,0 +1,63 @@
+version: '3'
+
+volumes:
+  production_postgres_data: {}
+  production_postgres_data_backups: {}
+  production_traefik: {}
+
+services:
+  django: &django
+    build:
+      context: notifications_api1
+      dockerfile: compose/production/django/Dockerfile
+    image: notifications_api_production_django
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .envs/.production/.django
+      - .envs/.production/.postgres
+    command: /start
+
+  postgres:
+    build:
+      context: notifications_api1
+      dockerfile: compose/production/postgres/Dockerfile
+    image: notifications_api_production_postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data:Z
+      - production_postgres_data_backups:/backups:z
+    env_file:
+      - .envs/.production/.postgres
+
+  traefik:
+    build:
+      context: notifications_api1
+      dockerfile: compose/production/traefik/Dockerfile
+    image: notifications_api_production_traefik
+    depends_on:
+      - django
+    volumes:
+      - production_traefik:/etc/traefik/acme:z
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:5555:5555"
+
+  redis:
+    image: redis:6
+
+  celeryworker:
+    <<: *django
+    image: notifications_api_production_celeryworker
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: notifications_api_production_celerybeat
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: notifications_api_production_flower
+    command: /start-flower
