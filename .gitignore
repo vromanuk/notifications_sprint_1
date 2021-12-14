@@ -88,4 +88,5 @@ __pycache__/
 local_settings.py
 
 .env*
+!.env-template
 db.sqlite3

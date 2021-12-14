@@ -1,7 +1,0 @@
-# PostgreSQL
-# ------------------------------------------------------------------------------
-POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
-POSTGRES_DB=notifications_api
-POSTGRES_USER=SJnjkSflmGSbQweScxwLDPqbblXwTYsq
-POSTGRES_PASSWORD=LjzEK0JsuiOaErTtcDJWvz4shdvKOTNX8H1ZAIlUCjfDL7npwhgTEaL8ig5LpVm6
