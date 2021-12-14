@@ -7,7 +7,7 @@ volumes:
 services:
   django: &django
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/local/django/Dockerfile
     image: notifications_api_local_django
     container_name: django
@@ -25,7 +25,7 @@ services:
 
   postgres:
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/production/postgres/Dockerfile
     image: notifications_api_production_postgres
     container_name: postgres
@@ -39,7 +39,7 @@ services:
     image: notifications_api_local_docs
     container_name: docs
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/local/docs/Dockerfile
     env_file:
       - .envs/.local/.django

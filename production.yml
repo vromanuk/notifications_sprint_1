@@ -8,7 +8,7 @@ volumes:
 services:
   django: &django
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/production/django/Dockerfile
     image: notifications_api_production_django
     depends_on:
@@ -21,7 +21,7 @@ services:
 
   postgres:
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/production/postgres/Dockerfile
     image: notifications_api_production_postgres
     volumes:
@@ -32,7 +32,7 @@ services:
 
   traefik:
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/production/traefik/Dockerfile
     image: notifications_api_production_traefik
     depends_on:
