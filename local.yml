@@ -17,8 +17,7 @@ services:
     volumes:
       - .:/app:z
     env_file:
-      - notifications_api/.envs/.local/.django
-      - notifications_api/.envs/.local/.postgres
+      - .env-prod
     ports:
       - "8000:8000"
     command: /start
