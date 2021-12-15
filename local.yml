@@ -7,7 +7,7 @@ volumes:
 services:
   django: &django
     build:
-      context: notifications_api
+      context: .
       dockerfile: compose/local/django/Dockerfile
     image: notifications_api_local_django
     container_name: django
