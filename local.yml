@@ -34,22 +34,6 @@ services:
     env_file:
       - ./.env-prod
 
-  docs:
-    image: notifications_api_local_docs
-    container_name: docs
-    build:
-      context: .
-      dockerfile: compose/local/docs/Dockerfile
-    env_file:
-      - ./.env-prod
-    volumes:
-      - ./docs:/docs:z
-      - ./config:/app/config:z
-      - ./notifications_api:/app/notifications_api:z
-    ports:
-      - "7000:7000"
-    command: /start-docs
-
   redis:
     image: redis:6
     container_name: redis
