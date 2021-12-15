@@ -12,7 +12,11 @@ urlpatterns = [
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    # User management
+    path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("api-auth/", include("rest_framework.urls")),
+    path("", include("notifications_api.apps.smoke.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

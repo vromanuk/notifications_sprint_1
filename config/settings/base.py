@@ -75,11 +75,16 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+    "rest_framework",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "django_celery_beat",
 ]
 
 LOCAL_APPS = [
     # Your stuff: custom apps go here
+    "notifications_api.apps.smoke",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
