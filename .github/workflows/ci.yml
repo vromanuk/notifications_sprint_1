@@ -44,7 +44,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the Stack
-        run:  docker-compose -f local.yml build
+        run:  |
+          echo "${{secrets.NOTIFICATIONS_PROD_ENVS }}" > .env-prod
+          docker-compose -f local.yml build
 
       - name: Run DB Migrations
         run:  docker-compose -f local.yml run --rm django python manage.py migrate
