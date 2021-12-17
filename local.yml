@@ -3,6 +3,7 @@ version: '3'
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
+  kafka-data: {}
 
 services:
   django: &django
@@ -17,7 +18,7 @@ services:
     volumes:
       - .:/app:z
     env_file:
-      - ./.env-prod
+      - ./.env
     ports:
       - "8000:8000"
     command: /start
@@ -32,7 +33,7 @@ services:
       - local_postgres_data:/var/lib/postgresql/data:Z
       - local_postgres_data_backups:/backups:z
     env_file:
-      - ./.env-prod
+      - ./.env
 
   redis:
     image: redis:6
@@ -65,3 +66,21 @@ services:
     ports:
       - "5555:5555"
     command: /start-flower
+
+  zookeeper:
+    image: bitnami/zookeeper:3.7.0
+    container_name: zookeeper
+    env_file:
+      - ./.env
+
+  kafka:
+    image: bitnami/kafka:3.0.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 9093:9093
+    volumes:
+      - kafka-data:/data/kafka/
+    env_file:
+      - ./.env

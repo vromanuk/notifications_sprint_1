@@ -4,6 +4,7 @@ volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
   production_traefik: {}
+  kafka-prod-data: {}
 
 services:
   django: &django
@@ -60,3 +61,21 @@ services:
     <<: *django
     image: notifications_api_production_flower
     command: /start-flower
+
+  zookeeper:
+    image: bitnami/zookeeper:3.7.0
+    container_name: zookeeper
+    env_file:
+      - .env-prod
+
+  kafka:
+    image: bitnami/kafka:3.0.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 9093:9093
+    volumes:
+      - kafka-prod-data:/data/kafka/
+    env_file:
+      - .env-prod
