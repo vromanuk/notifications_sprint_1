@@ -46,6 +46,7 @@ jobs:
       - name: Build the Stack
         run:  |
           echo "${{secrets.NOTIFICATIONS_PROD_ENVS }}" > .env-prod
+          echo "${{secrets.NOTIFICATIONS_PROD_ENVS }}" > .env
           docker-compose -f local.yml build
 
       - name: Run DB Migrations
