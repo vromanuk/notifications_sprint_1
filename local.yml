@@ -84,3 +84,16 @@ services:
       - kafka-data:/data/kafka/
     env_file:
       - ./.env
+
+  kafka-consumer:
+    <<: *django
+    image: notifications_api_local_kafka-consumer
+    container_name: kafka-consumer
+    depends_on:
+      - kafka
+      - zookeeper
+    ports: [ ]
+    restart: on-failure
+    command: /start-kafka-consumer
+    env_file:
+      - ./.env

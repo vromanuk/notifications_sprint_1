@@ -34,6 +34,7 @@ ARG APP_HOME=/app
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV BUILD_ENV ${BUILD_ENVIRONMENT}
+ENV PYTHONPATH ${APP_HOME}
 
 WORKDIR ${APP_HOME}
 
@@ -81,6 +82,10 @@ RUN chmod +x /start-celerybeat
 COPY ./compose/production/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
+
+COPY ./compose/production/django/start-kafka-consumer /start-kafka-consumer
+RUN sed -i 's/\r$//g' /start-kafka-consumer
+RUN chmod +x /start-kafka-consumer
 
 
 # copy application code to WORKDIR

@@ -8,5 +8,5 @@ from notifications_api.kafka.handlers.base import BaseKafkaHandler
 class EventRegistry:
     topic_dispatcher: Dict[str, Type[BaseKafkaHandler]] = field(default_factory=dict)
 
-    def register(self, handler: Type[BaseKafkaHandler]):
+    def register(self, handler: Type[BaseKafkaHandler]) -> None:
         self.topic_dispatcher[handler.topic] = handler
