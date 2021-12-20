@@ -10,7 +10,5 @@ class UserRegisteredEventHandler(BaseKafkaHandler):
 
     @classmethod
     def handle(cls, body):
-        print("!" * 10)
-        print("HELLO FROM HANDLER")
         event = UserRegisteredEventSchema.parse_raw(body.value)
         send_welcome_letter_task.delay(event.username, event.email)

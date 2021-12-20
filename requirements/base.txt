@@ -21,3 +21,4 @@ django-redis==5.1.0  # https://github.com/jazzband/django-redis
 djangorestframework
 kafka-python
 pydantic
+django-anymail

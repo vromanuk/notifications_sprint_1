@@ -19,6 +19,7 @@ Markdown = "^3.3.6"
 django-filter = "^21.1"
 django-allauth = "^0.47.0"
 pydantic = "^1.8.2"
+django-anymail = {extras = ["mailgun"], version = "^8.4"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
