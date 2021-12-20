@@ -9,5 +9,5 @@ env = environ.Env()
 @lru_cache()
 def get_kafka_consumer() -> KafkaConsumer:
     return KafkaConsumer(
-        bootstrap_servers=f"{env.str('KAFKA_HOST')}:{env.str('KAFKA_PORT')}"
+        bootstrap_servers=[f"{env.str('KAFKA_HOST')}:{env.str('KAFKA_PORT')}"],
     )
