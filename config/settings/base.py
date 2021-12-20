@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -86,6 +87,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     # Your stuff: custom apps go here
     "notifications_api.apps.smoke",
+    "notifications_api.apps.task_scheduler",
     "notifications_api.kafka",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -293,6 +295,13 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_IMPORTS = ("kafka",)
+
+CELERY_BEAT_SCHEDULE = {
+    "scheduled-jobs": {
+        "task": "task_scheduler.tasks.execute_scheduled_tasks",
+        "schedule": timedelta(minutes=5),
+    },
+}
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
