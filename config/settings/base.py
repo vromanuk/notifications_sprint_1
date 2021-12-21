@@ -299,7 +299,7 @@ CELERY_IMPORTS = ("kafka",)
 
 CELERY_BEAT_SCHEDULE = {
     "scheduled-jobs": {
-        "task": "task_scheduler.tasks.execute_scheduled_tasks",
+        "task": "notifications_api.apps.task_scheduler.tasks.execute_scheduled_tasks",
         "schedule": timedelta(minutes=5),
     },
 }
