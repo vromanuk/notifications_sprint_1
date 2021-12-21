@@ -88,6 +88,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     "notifications_api.apps.smoke",
     "notifications_api.apps.task_scheduler",
+    "notifications_api.apps.users",
     "notifications_api.kafka",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
