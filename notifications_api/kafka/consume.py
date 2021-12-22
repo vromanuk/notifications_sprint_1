@@ -1,3 +1,8 @@
+# flake8: noqa
+
+import django
+
+django.setup()
 from notifications_api.kafka.consumer import get_kafka_consumer
 from notifications_api.kafka.events import event_registry
 
