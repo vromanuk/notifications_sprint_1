@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_celery_beat",
     "anymail",
+    "notifications_api.apps.admin_emails",
 ]
 
 LOCAL_APPS = [
