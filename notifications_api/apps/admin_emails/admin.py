@@ -24,12 +24,8 @@ requeue.short_description = "Добавить в очередь"
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
     inlines = (TemplateVariableInline, )
-    list_display = ["id", "to_display", "subject", "template", "from_email", "status", "scheduled_time", "priority"]
+    list_display = ["id", "to", "subject", "template", "from_email", "status", "scheduled_time", "priority"]
     actions = [requeue]
-
-    def to_display(self, instance):
-        return ", ".join(instance.to)
-    to_display.short_description = "Кому"
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)

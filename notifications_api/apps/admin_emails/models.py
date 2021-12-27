@@ -1,7 +1,8 @@
 from enum import Enum
 
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db import models
-from django.template import Template
+from django.template import Template, Context
 
 from jsonfield import JSONField
 
@@ -19,11 +20,12 @@ class Email(models.Model):
         queued = (1, "queued")
         sent = (2, "sent")
 
-
+    # todo: set default to?
+    # make non editable?
     from_email = models.CharField(verbose_name="From email", max_length=254)
     to = models.TextField("Кому", help_text="список получателей через запятую")
-    cc = models.TextField("Копия", help_text="список получателей через запятую")
-    bcc = models.TextField("Скрытая копия", help_text="список получателей через запятую")
+    cc = models.TextField("Копия", help_text="список получателей через запятую", blank=True)
+    bcc = models.TextField("Скрытая копия", help_text="список получателей через запятую", blank=True)
 
     template = models.ForeignKey(
         "EmailTemplate",
@@ -35,7 +37,7 @@ class Email(models.Model):
     )
 
     subject = models.CharField(
-        verbose_name="Subject",
+        verbose_name="Тема",
         max_length=989,
         blank=True
     )
@@ -68,6 +70,63 @@ class Email(models.Model):
     class Meta:
         verbose_name = "Письмо"
         verbose_name_plural = "Письма"
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._cached_email_message = None
+
+    def email_message(self):
+        """
+        Returns Django EmailMessage object for sending.
+        """
+        if self._cached_email_message:
+            return self._cached_email_message
+
+        return self.prepare_email_message()
+
+    def _get_context(self):
+        context = {}
+        for var in self.templatevariable_set.all().filter(email=self):
+            context[var.name] = var.value
+        return Context(context)
+
+    def prepare_email_message(self):
+        message = self.message
+        if self.template is not None:
+            _context = self._get_context()
+            subject = self.template.render_subject(_context)
+            html_message = self.template.render_html_text(_context)
+        else:
+            subject = self.subject
+            html_message = self.html_message
+
+        # TODO: check to, bcc, cc
+        if html_message:
+            msg = EmailMultiAlternatives(
+                subject=subject, body=message, from_email=self.from_email,
+                to=self.to.split(','), bcc=self.bcc, cc=self.cc,
+                headers=self.headers)
+            msg.attach_alternative(html_message, "text/html")
+        else:
+            msg = EmailMessage(
+                subject=subject, body=message, from_email=self.from_email,
+                to=self.to.split(','), bcc=self.bcc, cc=self.cc,
+                headers=self.headers)
+
+        self._cached_email_message = msg
+        return msg
+
+    def dispatch(self):
+        try:
+            email_message = self.email_message()
+            email_message.send()
+            status = Email.STATUS_CHOICES.sent.value[0]
+        except Exception as e:
+            raise e
+        else:
+            self.status = status
+            self.save(update_fields=['status'])
 
     def __str__(self):
         return str(self.from_email) + " -> " + str(self.to) + " (" + self.subject + ")"
