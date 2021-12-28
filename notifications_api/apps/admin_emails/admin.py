@@ -1,40 +1,26 @@
 from django.contrib import admin
 
-from .models import Email, EmailTemplate, TemplateVariable
+from notifications_api.apps.admin_emails.tasks import (
+    schedule_send_bulk_emails_task,
+    send_bulk_emails_task,
+)
+
+from .models import EmailTemplate
 
 
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "subject")
+    actions = ["schedule_send_bulk_emails", "send_bulk_emails"]
 
+    @admin.action(description="Отправить заготовленное письмо для всех юзеров")
+    def send_bulk_emails(self, request, queryset):
+        email_template = queryset.get()
+        send_bulk_emails_task.delay(template_id=email_template.id)
 
-class TemplateVariableInline(admin.TabularInline):
-    model = TemplateVariable
-    extra = 1
-
-
-def requeue(modeladmin, request, queryset):
-    queryset.update(status=Email.STATUS_CHOICES.queued.value[0])
-
-
-requeue.short_description = "Добавить в очередь"
-
-
-@admin.register(Email)
-class EmailAdmin(admin.ModelAdmin):
-    inlines = (TemplateVariableInline,)
-    list_display = [
-        "id",
-        "to",
-        "subject",
-        "template",
-        "from_email",
-        "status",
-        "scheduled_time",
-        "priority",
-    ]
-    actions = [requeue]
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        obj.queue()
+    @admin.action(description="Отправить отложенное письмо для всех юзеров")
+    def schedule_send_bulk_emails(self, request, queryset):
+        email_template = queryset.get()
+        schedule_send_bulk_emails_task.delay(
+            template_id=email_template.id, launched_at=email_template.scheduled_at
+        )
