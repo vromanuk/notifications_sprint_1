@@ -82,7 +82,6 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_celery_beat",
     "anymail",
-    "notifications_api.apps.admin_emails",
 ]
 
 LOCAL_APPS = [
@@ -90,6 +89,7 @@ LOCAL_APPS = [
     "notifications_api.apps.smoke",
     "notifications_api.apps.task_scheduler",
     "notifications_api.apps.users",
+    "notifications_api.apps.admin_emails",
     "notifications_api.kafka",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
