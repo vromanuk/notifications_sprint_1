@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_celery_beat",
     "anymail",
+    "notifications_api.apps.admin_emails",
 ]
 
 LOCAL_APPS = [
@@ -231,9 +232,9 @@ EMAIL_BACKEND = env(
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
-EMAIL_HOST = "smtp.mailgun.org"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+EMAIL_HOST = env.str("DJANGO_EMAIL_HOST", default="smtp.mailgun.org")
+EMAIL_USE_TLS = env.bool("DJANGO_EMAIL_USE_TLS", default=True)
+EMAIL_PORT = env.int("DJANGO_EMAIL_PORT", default=587)
 ANYMAIL = {
     "MAILGUN_API_KEY": env("MAILGUN_API_KEY"),
     "MAILGUN_API_URL": env("MAILGUN_API_URL", default="https://api.mailgun.net/v3"),
