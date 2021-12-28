@@ -8,21 +8,43 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, unique=True)),
-                ('handle', models.CharField(max_length=250)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('launched_at', models.DateTimeField(db_index=True)),
-                ('finished_at', models.DateTimeField(blank=True, null=True)),
-                ('params', models.JSONField(blank=True, null=True, verbose_name='task_params')),
-                ('state', models.IntegerField(choices=[(1, 'Pending'), (2, 'Running'), (3, 'Failed'), (4, 'Finished'), (5, 'Canceled')], default=1)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("uuid", models.UUIDField(default=uuid.uuid4, unique=True)),
+                ("handle", models.CharField(max_length=250)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("launched_at", models.DateTimeField(db_index=True)),
+                ("finished_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "params",
+                    models.JSONField(blank=True, null=True, verbose_name="task_params"),
+                ),
+                (
+                    "state",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Pending"),
+                            (2, "Running"),
+                            (3, "Failed"),
+                            (4, "Finished"),
+                            (5, "Canceled"),
+                        ],
+                        default=1,
+                    ),
+                ),
             ],
         ),
     ]

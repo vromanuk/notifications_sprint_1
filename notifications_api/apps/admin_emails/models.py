@@ -2,8 +2,7 @@ from enum import Enum
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.db import models
-from django.template import Template, Context
-
+from django.template import Context, Template
 from jsonfield import JSONField
 
 
@@ -14,7 +13,6 @@ class Email(models.Model):
         high = (2, "high")
         now = (3, "now")
 
-
     class STATUS_CHOICES(Enum):
         failed = (0, "failed")
         queued = (1, "queued")
@@ -24,8 +22,12 @@ class Email(models.Model):
     # make non editable?
     from_email = models.CharField(verbose_name="From email", max_length=254)
     to = models.TextField("Кому", help_text="список получателей через запятую")
-    cc = models.TextField("Копия", help_text="список получателей через запятую", blank=True)
-    bcc = models.TextField("Скрытая копия", help_text="список получателей через запятую", blank=True)
+    cc = models.TextField(
+        "Копия", help_text="список получателей через запятую", blank=True
+    )
+    bcc = models.TextField(
+        "Скрытая копия", help_text="список получателей через запятую", blank=True
+    )
 
     template = models.ForeignKey(
         "EmailTemplate",
@@ -33,44 +35,39 @@ class Email(models.Model):
         null=True,
         blank=True,
         help_text="При выбранном шаблоне, поля с html и темой письма не будут использованы",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
 
-    subject = models.CharField(
-        verbose_name="Тема",
-        max_length=989,
-        blank=True
-    )
+    subject = models.CharField(verbose_name="Тема", max_length=989, blank=True)
     message = models.TextField("Сообщение", blank=True)
 
     html_message = models.TextField(
         verbose_name="HTML контент",
         blank=True,
-        help_text="Используется, если шаблон НЕ выбран"
+        help_text="Используется, если шаблон НЕ выбран",
     )
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     last_updated = models.DateTimeField(db_index=True, auto_now=True)
     scheduled_time = models.DateTimeField(
-        "Дата и время отправки", blank=True, null=True, db_index=True)
+        "Дата и время отправки", blank=True, null=True, db_index=True
+    )
     headers = JSONField("Заголовки", blank=True, null=True)
     status = models.PositiveSmallIntegerField(
         "Статус",
-        choices=[x.value for x in STATUS_CHOICES], db_index=True,
-        blank=True, null=True)
-    priority = models.PositiveSmallIntegerField(
-        "Приоритет",
-        choices=[x.value for x in PRIORITY_CHOICES],
-        blank=True, null=True)
-
-    send_now = models.BooleanField(
-        verbose_name="Отправить сразу",
-        default=False
+        choices=[x.value for x in STATUS_CHOICES],
+        db_index=True,
+        blank=True,
+        null=True,
     )
+    priority = models.PositiveSmallIntegerField(
+        "Приоритет", choices=[x.value for x in PRIORITY_CHOICES], blank=True, null=True
+    )
+
+    send_now = models.BooleanField(verbose_name="Отправить сразу", default=False)
 
     class Meta:
         verbose_name = "Письмо"
         verbose_name_plural = "Письма"
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -104,15 +101,25 @@ class Email(models.Model):
         # TODO: check to, bcc, cc
         if html_message:
             msg = EmailMultiAlternatives(
-                subject=subject, body=message, from_email=self.from_email,
-                to=self.to.split(','), bcc=self.bcc, cc=self.cc,
-                headers=self.headers)
+                subject=subject,
+                body=message,
+                from_email=self.from_email,
+                to=self.to.split(","),
+                bcc=self.bcc,
+                cc=self.cc,
+                headers=self.headers,
+            )
             msg.attach_alternative(html_message, "text/html")
         else:
             msg = EmailMessage(
-                subject=subject, body=message, from_email=self.from_email,
-                to=self.to.split(','), bcc=self.bcc, cc=self.cc,
-                headers=self.headers)
+                subject=subject,
+                body=message,
+                from_email=self.from_email,
+                to=self.to.split(","),
+                bcc=self.bcc,
+                cc=self.cc,
+                headers=self.headers,
+            )
 
         self._cached_email_message = msg
         return msg
@@ -126,7 +133,7 @@ class Email(models.Model):
             raise e
         else:
             self.status = status
-            self.save(update_fields=['status'])
+            self.save(update_fields=["status"])
 
     def __str__(self):
         return str(self.from_email) + " -> " + str(self.to) + " (" + self.subject + ")"
@@ -141,16 +148,9 @@ class EmailTemplate(models.Model):
         verbose_name = "Шаблон письма"
         verbose_name_plural = "Шаблоны писем"
 
+    name = models.CharField(verbose_name="Название шаблона", max_length=254)
 
-    name = models.CharField(
-        verbose_name="Название шаблона",
-        max_length=254
-    )
-
-    description = models.TextField(
-        verbose_name="Описание",
-        blank=True
-    )
+    description = models.TextField(verbose_name="Описание", blank=True)
 
     subject = models.CharField(
         verbose_name="Тема",
@@ -180,24 +180,13 @@ class TemplateVariable(models.Model):
         verbose_name = "Template variable"
         verbose_name_plural = "Template variables"
 
-
-    email = models.ForeignKey(
-        "Email",
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE
-    )
+    email = models.ForeignKey("Email", null=True, blank=True, on_delete=models.CASCADE)
 
     name = models.CharField(
-        verbose_name="Название переменной",
-        max_length=254,
-        blank=False
+        verbose_name="Название переменной", max_length=254, blank=False
     )
 
-    value = models.TextField(
-        verbose_name="Значение переменной",
-        blank=True
-    )
+    value = models.TextField(verbose_name="Значение переменной", blank=True)
 
     def __str__(self):
         return self.name

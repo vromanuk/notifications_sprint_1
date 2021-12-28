@@ -25,6 +25,8 @@ django-anymail = {extras = ["mailgun"], version = "^8.4"}
 pytest = "^6.2.5"
 pytest-django = "^4.5.2"
 mypy = "^0.920"
+black = "^21.12b0"
+isort = "^5.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

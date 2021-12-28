@@ -9,64 +9,179 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Email',
+            name="Email",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('from_email', models.CharField(max_length=254, verbose_name='From email')),
-                ('to', models.TextField(help_text='список получателей через запятую', verbose_name='Кому')),
-                ('cc', models.TextField(help_text='список получателей через запятую', verbose_name='Копия')),
-                ('bcc', models.TextField(help_text='список получателей через запятую', verbose_name='Скрытая копия')),
-                ('subject', models.CharField(blank=True, max_length=989, verbose_name='Subject')),
-                ('message', models.TextField(blank=True, verbose_name='Сообщение')),
-                ('html_message', models.TextField(blank=True, help_text='Используется, если шаблон НЕ выбран', verbose_name='HTML контент')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('last_updated', models.DateTimeField(auto_now=True, db_index=True)),
-                ('scheduled_time', models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='Дата и время отправки')),
-                ('headers', jsonfield.fields.JSONField(blank=True, null=True, verbose_name='Заголовки')),
-                ('status', models.PositiveSmallIntegerField(blank=True, choices=[(0, 'failed'), (1, 'queued'), (2, 'sent')], db_index=True, null=True, verbose_name='Статус')),
-                ('priority', models.PositiveSmallIntegerField(blank=True, choices=[(0, 'low'), (1, 'medium'), (2, 'high'), (3, 'now')], null=True, verbose_name='Приоритет')),
-                ('send_now', models.BooleanField(default=False, verbose_name='Отправить сразу')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "from_email",
+                    models.CharField(max_length=254, verbose_name="From email"),
+                ),
+                (
+                    "to",
+                    models.TextField(
+                        help_text="список получателей через запятую",
+                        verbose_name="Кому",
+                    ),
+                ),
+                (
+                    "cc",
+                    models.TextField(
+                        help_text="список получателей через запятую",
+                        verbose_name="Копия",
+                    ),
+                ),
+                (
+                    "bcc",
+                    models.TextField(
+                        help_text="список получателей через запятую",
+                        verbose_name="Скрытая копия",
+                    ),
+                ),
+                (
+                    "subject",
+                    models.CharField(
+                        blank=True, max_length=989, verbose_name="Subject"
+                    ),
+                ),
+                ("message", models.TextField(blank=True, verbose_name="Сообщение")),
+                (
+                    "html_message",
+                    models.TextField(
+                        blank=True,
+                        help_text="Используется, если шаблон НЕ выбран",
+                        verbose_name="HTML контент",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("last_updated", models.DateTimeField(auto_now=True, db_index=True)),
+                (
+                    "scheduled_time",
+                    models.DateTimeField(
+                        blank=True,
+                        db_index=True,
+                        null=True,
+                        verbose_name="Дата и время отправки",
+                    ),
+                ),
+                (
+                    "headers",
+                    jsonfield.fields.JSONField(
+                        blank=True, null=True, verbose_name="Заголовки"
+                    ),
+                ),
+                (
+                    "status",
+                    models.PositiveSmallIntegerField(
+                        blank=True,
+                        choices=[(0, "failed"), (1, "queued"), (2, "sent")],
+                        db_index=True,
+                        null=True,
+                        verbose_name="Статус",
+                    ),
+                ),
+                (
+                    "priority",
+                    models.PositiveSmallIntegerField(
+                        blank=True,
+                        choices=[(0, "low"), (1, "medium"), (2, "high"), (3, "now")],
+                        null=True,
+                        verbose_name="Приоритет",
+                    ),
+                ),
+                (
+                    "send_now",
+                    models.BooleanField(default=False, verbose_name="Отправить сразу"),
+                ),
             ],
             options={
-                'verbose_name': 'Письмо',
-                'verbose_name_plural': 'Письма',
+                "verbose_name": "Письмо",
+                "verbose_name_plural": "Письма",
             },
         ),
         migrations.CreateModel(
-            name='EmailTemplate',
+            name="EmailTemplate",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=254, verbose_name='Название шаблона')),
-                ('description', models.TextField(blank=True, verbose_name='Описание')),
-                ('subject', models.CharField(max_length=254, verbose_name='Тема')),
-                ('email_html_text', models.TextField(blank=True, verbose_name='HTML')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=254, verbose_name="Название шаблона"),
+                ),
+                ("description", models.TextField(blank=True, verbose_name="Описание")),
+                ("subject", models.CharField(max_length=254, verbose_name="Тема")),
+                ("email_html_text", models.TextField(blank=True, verbose_name="HTML")),
             ],
             options={
-                'verbose_name': 'Шаблон письма',
-                'verbose_name_plural': 'Шаблоны писем',
+                "verbose_name": "Шаблон письма",
+                "verbose_name_plural": "Шаблоны писем",
             },
         ),
         migrations.CreateModel(
-            name='TemplateVariable',
+            name="TemplateVariable",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=254, verbose_name='Название переменной')),
-                ('value', models.TextField(blank=True, verbose_name='Значение переменной')),
-                ('email', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='admin_emails.email')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=254, verbose_name="Название переменной"
+                    ),
+                ),
+                (
+                    "value",
+                    models.TextField(blank=True, verbose_name="Значение переменной"),
+                ),
+                (
+                    "email",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="admin_emails.email",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Template variable',
-                'verbose_name_plural': 'Template variables',
+                "verbose_name": "Template variable",
+                "verbose_name_plural": "Template variables",
             },
         ),
         migrations.AddField(
-            model_name='email',
-            name='template',
-            field=models.ForeignKey(blank=True, help_text='При выбранном шаблоне, поля с html и темой письма не будут использованы', null=True, on_delete=django.db.models.deletion.CASCADE, to='admin_emails.emailtemplate', verbose_name='Шаблон'),
+            model_name="email",
+            name="template",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="При выбранном шаблоне, поля с html и темой письма не будут использованы",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="admin_emails.emailtemplate",
+                verbose_name="Шаблон",
+            ),
         ),
     ]

@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from .models import Email, EmailTemplate, TemplateVariable
 
 
@@ -23,8 +22,17 @@ requeue.short_description = "Добавить в очередь"
 
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
-    inlines = (TemplateVariableInline, )
-    list_display = ["id", "to", "subject", "template", "from_email", "status", "scheduled_time", "priority"]
+    inlines = (TemplateVariableInline,)
+    list_display = [
+        "id",
+        "to",
+        "subject",
+        "template",
+        "from_email",
+        "status",
+        "scheduled_time",
+        "priority",
+    ]
     actions = [requeue]
 
     def save_model(self, request, obj, form, change):

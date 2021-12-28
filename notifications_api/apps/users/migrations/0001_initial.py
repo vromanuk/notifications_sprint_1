@@ -9,18 +9,33 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254, unique=True, verbose_name='email address')),
-                ('username', models.CharField(max_length=250, verbose_name='username')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now)),
-                ('uuid', models.UUIDField(default=uuid.uuid4, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        max_length=254, unique=True, verbose_name="email address"
+                    ),
+                ),
+                ("username", models.CharField(max_length=250, verbose_name="username")),
+                (
+                    "date_joined",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
+                ("uuid", models.UUIDField(default=uuid.uuid4, unique=True)),
             ],
         ),
     ]
