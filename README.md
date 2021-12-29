@@ -5,5 +5,5 @@
 
 ## How to run
 
-Для запуска, воспользуйтесь следующей командой:
-`docker-compose up -d --build`
+Для локального запуска, воспользуйтесь следующей командой:
+`docker-compose -f local.yml up --build -d`

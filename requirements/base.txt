@@ -19,7 +19,7 @@ django-allauth==0.47.0  # https://github.com/pennersr/django-allauth
 django-crispy-forms==1.13.0  # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap5==0.6  # https://github.com/django-crispy-forms/crispy-bootstrap5
 django-redis==5.1.0  # https://github.com/jazzband/django-redis
-djangorestframework
+djangorestframework==3.13.0
 kafka-python
-pydantic
-django-anymail
+pydantic==1.8.2
+django-anymail==8.4
