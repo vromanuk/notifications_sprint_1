@@ -1,17 +1,18 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class EmailTemplate(models.Model):
     class Meta:
-        verbose_name = "Шаблон письма"
-        verbose_name_plural = "Шаблоны писем"
+        verbose_name = "Email template"
+        verbose_name_plural = "Email templates"
 
-    name = models.CharField(verbose_name="Название шаблона", max_length=254)
+    name = models.CharField(verbose_name=_("template name"), max_length=254)
 
-    description = models.TextField(verbose_name="Описание", blank=True)
+    description = models.TextField(verbose_name=_("description"), blank=True)
 
     subject = models.CharField(
-        verbose_name="Тема",
+        verbose_name=_("template subject"),
         max_length=254,
         blank=False,
     )
@@ -22,5 +23,5 @@ class EmailTemplate(models.Model):
     )
 
     scheduled_at = models.DateTimeField(
-        "Дата и время отправки", blank=True, null=True, db_index=True
+        _("schedule email mailing"), blank=True, null=True, db_index=True
     )

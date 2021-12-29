@@ -7,3 +7,10 @@
 
 Для локального запуска, воспользуйтесь следующей командой:
 `docker-compose -f local.yml up --build -d`
+
+После этого, необходимо создать суперпользователя (для того, чтобы запустить скрипт локально, нужно установить `POSTGRES_HOST=localhost`):
+
+`python manage.py create_default_superuser`
+
+Далее, для email рассылок, перейдите на этот адрес:
+`localhost:8000/admin`
