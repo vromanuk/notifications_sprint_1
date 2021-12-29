@@ -14,5 +14,11 @@ class UserRegisteredEventHandler(BaseKafkaHandler):
     @classmethod
     def handle(cls, body):
         event = UserRegisteredEventSchema.parse_raw(body.value)
-        send_welcome_letter_task.delay(event.username, event.email)
+        send_welcome_letter_task.delay(
+            event.username,
+            event.email,
+            event.notification_transport,
+            subject=event.subject,
+            content=event.content,
+        )
         save_new_user_to_db_task.delay(event.username, event.email)

@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from notifications_api.kafka.schemas.base_event_schema import BaseEventSchema
 
 
-class UserRegisteredEventSchema(BaseModel):
+class UserRegisteredEventSchema(BaseEventSchema):
     username: str
     email: str

@@ -1,18 +1,25 @@
-import environ
 from celery import shared_task
-from django.core.mail import EmailMultiAlternatives
 
 from notifications_api.apps.users.services.user import UserService
-
-env = environ.Env()
+from notifications_api.kafka.constants import (
+    TRANSPORT_DISPATCHER,
+    NotificationTransport,
+)
+from notifications_api.kafka.services.transport_service import TransportService
 
 
 @shared_task
-def send_welcome_letter_task(username: str, send_to: str) -> None:
-    subject, from_email, to = "Welcome Letter", env.str("MAILGUN_DOMAIN"), send_to
-    text_content = f"{username.capitalize()} привет! Рады, что выбрали нас 😍"
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.send()
+def send_welcome_letter_task(
+    username: str,
+    send_to: str,
+    transport: str = NotificationTransport.EMAIL.value,
+    **kwargs,
+) -> None:
+    notification_transport = TRANSPORT_DISPATCHER[transport]
+    transport_service = TransportService(notification_transport)
+    transport_service.send_welcome_letter(
+        username, send_to, subject=kwargs["subject"], content=kwargs["content"]
+    )
 
 
 @shared_task
