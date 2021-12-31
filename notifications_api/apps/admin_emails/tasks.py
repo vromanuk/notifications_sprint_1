@@ -1,13 +1,11 @@
 from celery import shared_task
-from django.core.mail import EmailMultiAlternatives
-from django.template import Context
 from django.utils import timezone
 
-from config.settings.base import env
 from notifications_api.apps.admin_emails.models import EmailTemplate
-from notifications_api.apps.admin_emails.utils import render_html_text, render_subject
 from notifications_api.apps.task_scheduler.scheduler import Scheduler
 from notifications_api.apps.users.models import User
+from notifications_api.emails.constants import NotificationTransport
+from notifications_api.emails.services.transport_service import TransportService
 
 
 @shared_task
@@ -44,18 +42,11 @@ def send_bulk_emails(**kwargs):
         template = EmailTemplate.objects.get(kwargs["template_id"])
     except EmailTemplate.DoesNotExist:
         raise ValueError(f"There is no such template_id `{kwargs['template_id']}`")
-    ctx = Context()
-    subject, from_email, to = (
-        render_subject(ctx, template.subject),
-        env.str("MAILGUN_DOMAIN"),
-        kwargs["email"],
-    )
-    html_message = render_html_text(ctx, template.email_html_text)
-    msg = EmailMultiAlternatives(
-        subject=subject,
+
+    transport_service = TransportService(NotificationTransport.EMAIL.value)
+    transport_service.send_email_with_attachments(
+        to=kwargs["email"],
+        subject=template.subject,
         body="",
-        from_email=from_email,
-        to=to,
+        attachments=template.email_html_text,
     )
-    msg.attach_alternative(html_message, "text/html")
-    msg.send()

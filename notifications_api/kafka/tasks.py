@@ -1,11 +1,11 @@
 from celery import shared_task
 
 from notifications_api.apps.users.services.user import UserService
-from notifications_api.kafka.constants import (
+from notifications_api.emails.constants import (
     TRANSPORT_DISPATCHER,
     NotificationTransport,
 )
-from notifications_api.kafka.services.transport_service import TransportService
+from notifications_api.emails.services.transport_service import TransportService
 
 
 @shared_task

@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from notifications_api.kafka.constants import NotificationTransport
+from notifications_api.emails.constants import NotificationTransport
 
 
 class BaseEventSchema(BaseModel):

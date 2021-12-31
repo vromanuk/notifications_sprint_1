@@ -1,6 +1,6 @@
 import enum
 
-from notifications_api.kafka.notification_transport import EmailTransport
+from notifications_api.emails.notification_transport import EmailTransport
 
 
 @enum.unique

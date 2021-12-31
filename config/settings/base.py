@@ -91,6 +91,7 @@ LOCAL_APPS = [
     "notifications_api.apps.users",
     "notifications_api.apps.admin_emails",
     "notifications_api.kafka",
+    "notifications_api.emails",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
